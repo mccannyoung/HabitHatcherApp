@@ -3,6 +3,7 @@ import 'dart:io' as io;
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart';
+import '../model/habit.dart';
 
 class DBHelper{
 
@@ -27,46 +28,33 @@ class DBHelper{
   void _onCreate(Database db, int version) async {
     // When creating the db, create the table
     await db.execute(
-    "CREATE TABLE habits(id INTEGER PRIMARY KEY, description TEXT, streak INTEGER, grade REAL, notes TEXT)"
+    "CREATE TABLE habits(id INTEGER PRIMARY KEY, description TEXT, notes TEXT)"
     );
     //"CREATE TABLE Employee(id INTEGER PRIMARY KEY, firstname TEXT, lastname TEXT, mobileno TEXT,emailId TEXT )"
-    print("Created tables");
+    print("Created habit table");
   }
   
   // Retrieving employees from Employee Tables
   Future<List<Habit>> getHabits() async {
     var dbClient = await db;
-    List<Map> list = await dbClient.rawQuery('SELECT * FROM Employee');
-    List<Employee> employees = new List();
+    List<Map> list = await dbClient.rawQuery('SELECT * FROM habits');
+    List<Habit> habits = new List();
     for (int i = 0; i < list.length; i++) {
-      employees.add(new Employee(list[i]["firstname"], list[i]["lastname"], list[i]["mobileno"], list[i]["emailid"]));
+      habits.add(new Habit( list[i]["description"], list[i]["notes"]));
     }
-    print(employees.length);
-    return employees;
+    print(habits.length);
+    return habits;
   }
   
-  void saveEmployee(Employee employee) async {
+
+  newHabit(Habit habit) async {
     var dbClient = await db;
-    await dbClient.transaction((txn) async {
-      return await txn.rawInsert(
-          'INSERT INTO Employee(firstname, lastname, mobileno, emailid ) VALUES(' +
-              '\'' +
-              employee.firstName +
-              '\'' +
-              ',' +
-              '\'' +
-              employee.lastName +
-              '\'' +
-              ',' +
-              '\'' +
-              employee.mobileNo +
-              '\'' +
-              ',' +
-              '\'' +
-              employee.emailId +
-              '\'' +
-              ')');
-    });
+    var res = await dbClient.rawInsert(
+          'INSERT INTO habits(description, notes )' 
+          'VALUES(?,?)', [habit.description, habit.notes]);
+    print('insert returned ');
+    print(res);
+    return res;
   }
 
 
