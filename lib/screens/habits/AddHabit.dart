@@ -91,7 +91,7 @@ class _AddHabitState extends State<AddHabit> {
         }        
         var _db = db.DBHelper();
         var habit = Habit(description, notes);
-        if (_db.newHabit(habit)){
+        _db.newHabit(habit);
           showDialog(
             context: context,
             barrierDismissible: false,
@@ -125,5 +125,5 @@ class _AddHabitState extends State<AddHabit> {
           );
         }
     }
-}
+
 
