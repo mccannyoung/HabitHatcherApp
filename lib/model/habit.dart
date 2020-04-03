@@ -1,9 +1,10 @@
 class Habit {
   
+  final int id;
   final String description;
   final String notes;
 
-  Habit( this.description, this.notes);
+  Habit( this.id, this.description, this.notes);
   
   Map<String, dynamic> toMap() {
     return {

@@ -40,12 +40,17 @@ class DBHelper{
     List<Map> list = await dbClient.rawQuery('SELECT * FROM habits');
     List<Habit> habits = new List();
     for (int i = 0; i < list.length; i++) {
-      habits.add(new Habit( list[i]["description"], list[i]["notes"]));
+      habits.add(new Habit( list[i]["id"], list[i]["description"], list[i]["notes"]));
     }
     print(habits.length);
     return habits;
   }
   
+  getIdforNewHabit() async{
+    var dbClient = await db;
+    var res = await dbClient.rawQuery('Select max(id)+1 as id from habits');
+    return res[0]["id"];
+  }
 
   newHabit(Habit habit) async {
     var dbClient = await db;

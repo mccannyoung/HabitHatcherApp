@@ -1,13 +1,6 @@
-//import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
-//import 'package:shared_preferences/shared_preferences.dart';
-
-//import 'package:flutter_svg/flutter_svg.dart';
-
-//import 'dart:math';
 
 import 'package:habithatcher/model/habit.dart';
 import 'package:habithatcher/database/database.dart' as db;
@@ -21,12 +14,11 @@ class AddHabit extends StatefulWidget {
 }
 
 class _AddHabitState extends State<AddHabit> {
-    var newHabit = new Habit("","");
-
     int id;
     String description;
     String notes;
 
+    
     final scaffoldKey = new GlobalKey<ScaffoldState>();
     final formKey = new GlobalKey<FormState>();
     navigateToPrevScreen() {
@@ -83,14 +75,19 @@ class _AddHabitState extends State<AddHabit> {
       );
     }
 
-    _saveHabit(){
+    _getNextId() async {
+      var _db = db.DBHelper();
+      id = await _db.getIdforNewHabit();
+    }
+    _saveHabit() async {
+        await _getNextId();
         if(this.formKey.currentState.validate()) {
           formKey.currentState.save();
         } else {
           return null;
         }        
         var _db = db.DBHelper();
-        var habit = Habit(description, notes);
+        var habit = Habit(id, description, notes);
         _db.newHabit(habit);
           showDialog(
             context: context,
