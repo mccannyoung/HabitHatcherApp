@@ -44,32 +44,32 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text('Habit Hatcher App'),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+      body: Column(
+        
+         mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              quotes[random.nextInt(quotes.length)].toString(),
+                quotes[random.nextInt(quotes.length)].toString(),
             ),
             SvgPicture.asset(
                 assetNames[0]
               ),
               HabitListWidget(),
-              //Text(
-                //habitList,
-              //),
-              MaterialButton( 
-              child: Text('Add a new habit to track'),
-               onPressed: () {
-                   Navigator.push(
-                     context,
-                      MaterialPageRoute(builder: (context) => new AddHabit()));
-           }
-      ),
-
+              new Align(
+                alignment: FractionalOffset.bottomCenter,
+                child: 
+                  MaterialButton( 
+                    child: Text('Add a new habit to track'),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => new AddHabit())
+                      );
+                    }
+                  ),
+              ),
           ],
         ),
-      ),
     );
   }
 }

@@ -29,9 +29,10 @@ class _HabitListWidgetState extends State<HabitListWidget> {
   @override 
   Widget build(BuildContext context) {
     return 
-    Column(
-      children: [
-        ListView(
+      Container (
+        height:  150,
+        child: 
+         ListView(
           padding: const EdgeInsets.all(8),
           children: ListTile.divideTiles(
             context: context,
@@ -39,11 +40,12 @@ class _HabitListWidgetState extends State<HabitListWidget> {
               ListTile(title:  Text('Hello World 1'),),
               ListTile(title:  Text('Hello World 2'),),
               ListTile(title:  Text('Hello World 3'),),
+              ListTile(title:  Text('Hello World 4'),),
             ]
           ) .toList(),
         ),
-      ]
-    );
+        );
+       
   }
 }
 
