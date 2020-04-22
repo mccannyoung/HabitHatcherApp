@@ -29,7 +29,27 @@
           return '';
       }
     }
+  }
 
+  enum Handicap{
+    easy,
+    normal,
+    hard,
+    impossible
+  }
+  class HanicapHelper{
+      static String getValue(Handicap handicap) {
+        switch(handicap){
+          case Handicap.easy:
+            return 'Easy';
+          case Handicap.hard:
+            return 'Hard';
+          case Handicap.impossible:
+            return 'Impossible';
+          default:
+            return 'Normal';
+        }
+      }
   }
 class HabitGoal {
   final int id;
@@ -37,9 +57,9 @@ class HabitGoal {
   final String timeFrame;
   final int goalValue;
   final bool active;
-  final String notes;
+  final String handicap;
 
-  HabitGoal(this.id, this.habitId, this.timeFrame, this.goalValue, this.active, this.notes);
+  HabitGoal(this.id, this.habitId, this.timeFrame, this.goalValue, this.active,  this.handicap);
 
   Map<String, dynamic> toMap() {
     return {
@@ -48,7 +68,7 @@ class HabitGoal {
       'timeFrame': timeFrame,
       'goalValue': goalValue,
       'active': active,
-      'notes': notes,
+      'handicap': handicap,
     };
   }
 }

@@ -1,16 +1,18 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
+//import 'package:flutter/rendering.dart';
 import 'package:habithatcher/model/habit.dart';
+import 'package:habithatcher/model/habit_goal.dart';
 import 'package:habithatcher/database/database.dart' as db;
+import 'package:habithatcher/screens/habits/HabitCard.dart';
 
-class HabitListWidget extends StatefulWidget{
+class HabitList extends StatefulWidget{
   @override 
-  _HabitListWidgetState createState() => _HabitListWidgetState();
+  _HabitListState createState() => _HabitListState();
 }
 
-class _HabitListWidgetState extends State<HabitListWidget> {
+class _HabitListState extends State<HabitList> {
   Future<List<Habit>> habitList;
   
   @protected
@@ -26,27 +28,33 @@ class _HabitListWidgetState extends State<HabitListWidget> {
       return habitsList;
   }
 
+  Future<HabitGoal> getGoalData(int habitId) async {
+      var dbHelper = db.DBHelper();
+      var goal = await dbHelper.getHabitGoalById(habitId);
+      return goal;
+  }
+
   @override 
   Widget build(BuildContext context) {
-    return 
-      Container (
-        height:  150,
-        child: 
-         ListView(
-          padding: const EdgeInsets.all(8),
-          children: ListTile.divideTiles(
-            context: context,
-            tiles: [
-              ListTile(title:  Text('Hello World 1'),),
-              ListTile(title:  Text('Hello World 2'),),
-              ListTile(title:  Text('Hello World 3'),),
-              ListTile(title:  Text('Hello World 4'),),
-            ]
-          ) .toList(),
-        ),
+    return  FutureBuilder (
+        builder:  (context,  snapshot) {     
+        if (snapshot.data==null || snapshot.hasData == false) {
+          return Container( child: new Text("loading data"),); 
+        }
+        return 
+        Container(
+          child: 
+            ListView.builder(
+              itemCount: snapshot.data.length, 
+              itemBuilder: (context, index){
+              Habit habit = snapshot.data[index];
+              Future<HabitGoal> goal = getGoalData(habit.id);
+                return  HabitCard(habit: habit, goal: goal,);
+              }
+            )   
         );
-       
-  }
+        },
+        future: loadHabitData(),
+    );
 }
-
-
+}

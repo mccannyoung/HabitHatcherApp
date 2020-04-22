@@ -48,26 +48,35 @@ class _MyHomePageState extends State<MyHomePage> {
         
          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(
-                quotes[random.nextInt(quotes.length)].toString(),
-            ),
-            SvgPicture.asset(
-                assetNames[0]
-              ),
-              HabitListWidget(),
+             Text(
+                 quotes[random.nextInt(quotes.length)].toString(),
+             ),
+             SvgPicture.asset(
+                 assetNames[0]
+               ),
+               MaterialButton(
+                 child: Text('Go to Your Habits'),
+                 onPressed: () {
+                       Navigator.push(
+                         context,
+                         MaterialPageRoute(builder: (context) => new HabitList())
+                       );
+                 }
+               ),
+             // HabitListWidget(),
               new Align(
-                alignment: FractionalOffset.bottomCenter,
-                child: 
-                  MaterialButton( 
-                    child: Text('Add a new habit to track'),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => new AddHabit())
-                      );
-                    }
-                  ),
-              ),
+                 alignment: FractionalOffset.bottomCenter,
+                 child: 
+                   MaterialButton( 
+                     child: Text('Add a new habit to track'),
+                     onPressed: () {
+                       Navigator.push(
+                         context,
+                         MaterialPageRoute(builder: (context) => new AddHabit())
+                       );
+                     }
+                   ),
+               ),
           ],
         ),
     );
