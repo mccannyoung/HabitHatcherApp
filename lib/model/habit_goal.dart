@@ -54,20 +54,22 @@
 class HabitGoal {
   final int id;
   final int habitId;
+  final String goalStart;
+  final String goalEnd;
   final String timeFrame;
   final int goalValue;
-  final bool active;
   final String handicap;
 
-  HabitGoal(this.id, this.habitId, this.timeFrame, this.goalValue, this.active,  this.handicap);
+  HabitGoal({this.id, this.habitId, this.goalStart, this.goalEnd, this.timeFrame, this.goalValue, this.handicap});
 
   Map<String, dynamic> toMap() {
     return {
       'id': id,
       'habitId' : habitId,
+      'goalStart': goalStart,
+      'goalEnd':goalEnd,
       'timeFrame': timeFrame,
       'goalValue': goalValue,
-      'active': active,
       'handicap': handicap,
     };
   }

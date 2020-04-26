@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 //import 'package:flutter/rendering.dart';
 import 'package:habithatcher/model/habit.dart';
-import 'package:habithatcher/model/habit_goal.dart';
+
 import 'package:habithatcher/database/database.dart' as db;
 import 'package:habithatcher/screens/habits/HabitCard.dart';
 
@@ -28,11 +28,11 @@ class _HabitListState extends State<HabitList> {
       return habitsList;
   }
 
-  Future<HabitGoal> getGoalData(int habitId) async {
-      var dbHelper = db.DBHelper();
-      var goal = await dbHelper.getHabitGoalById(habitId);
-      return goal;
-  }
+reload(){
+  setState(() {
+    habitList = loadHabitData();
+  });
+}
 
   @override 
   Widget build(BuildContext context) {
@@ -47,9 +47,8 @@ class _HabitListState extends State<HabitList> {
             ListView.builder(
               itemCount: snapshot.data.length, 
               itemBuilder: (context, index){
-              Habit habit = snapshot.data[index];
-              Future<HabitGoal> goal = getGoalData(habit.id);
-                return  HabitCard(habit: habit, goal: goal,);
+              Habit habit = snapshot.data[index];              
+              return  HabitCard(habit: habit,  refreshParent: reload);
               }
             )   
         );

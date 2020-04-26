@@ -22,21 +22,21 @@ class DBHelper{
   initDb() async {
     io.Directory documentsDirectory = await getApplicationDocumentsDirectory();
     String path = join(documentsDirectory.path, "habits.db");
-    var theDb = await openDatabase(path, version: 1, onCreate: _onCreate);
+    var theDb = await openDatabase(path, version: 2, onCreate: _onCreate);
     return theDb;
   }
 
-  // Creating a table name Employee with fields
+
   void _onCreate(Database db, int version) async {
     // When creating the db, create the table
     await db.execute(
       'CREATE TABLE habits (id INTEGER PRIMARY KEY, description TEXT, notes TEXT)'
     );
     await db.execute(
-      'CREATE TABLE habit_goals (id INTEGER PRIMARY KEY, habitId INTEGER UNIQUE,  timeFrame TEXT, goalValue INTEGER, active INTEGER, handicap TEXT)'
+      'CREATE TABLE habit_goals (id INTEGER PRIMARY KEY, habitId INTEGER NOT NULL ,  goalStart TEXT NOT NULL, goalEnd TEXT, timeFrame TEXT, goalValue INTEGER, handicap TEXT NOT NULL)'
     );
     await db.execute(
-        'CREATE TABLE habit_history(id INTEGER PRIMARY KEY, habitId INTEGER,  date TEXT, value INTEGER, notes TEXT)'
+        'CREATE TABLE habit_history(id INTEGER PRIMARY KEY, habitId INTEGER NOT NULL,  date TEXT NOT NULL, value INTEGER NOT NULL, notes TEXT)'
     );
     print("Created habit table");
   }
@@ -45,49 +45,77 @@ class DBHelper{
   Future<List<Habit>> getHabits() async {
     var dbClient = await db;
     List<Map> list = await dbClient.rawQuery('SELECT * FROM habits');
+    
     List<Habit> habits = new List();
-    for (int i = 0; i < list.length; i++) {
-      habits.add(new Habit( list[i]["id"], list[i]["description"], list[i]["notes"]));
+    if (list.length > 0 ) {
+      for (int i = 0; i < list.length; i++) {
+        int habitId = list[i]["id"];
+        List<Map> habitGoal = await dbClient.rawQuery('SELECT * FROM habit_goals where goalEnd IS NULL and  habitId =?', [habitId.toString()]);
+      HabitGoal goal = new HabitGoal();
+      if (habitGoal.length > 0) {
+        goal = new HabitGoal(id: habitGoal[0]["id"], habitId: list[i]["id"], goalStart: habitGoal[0]["goalStart"], goalEnd: habitGoal[0]["goalEnd"], timeFrame: habitGoal[0]["timeFrame"], goalValue: habitGoal[0]["goalValue"], handicap: habitGoal[0]["handicap"]); 
+      }
+      List<Map> habitHistories = await dbClient.rawQuery('SELECT * FROM habit_history WHERE  habitId =?',  [habitId.toString()]);
+      List<HabitHistory> history = new List();
+      if (history.length > 0) {
+        for (int j=0; j < habitHistories.length; j++){
+            history.add(new HabitHistory(id : habitHistories[j]["id"], habitId: habitHistories[j]["habitId"], date: habitHistories[j]["date"], value: habitHistories[j]["value"], notes: habitHistories[j]["notes"]));
+        }
+      }
+        habits.add(new Habit( id: list[i]["id"], description: list[i]["description"], notes: list[i]["notes"], goal: goal, history: history));
+      }
+      print(habits.length);
     }
-    print(habits.length);
     return habits;
   }
 
     Future<HabitGoal> getHabitGoalById(int id) async {
     var dbClient = await db;
-    List<Map> list = await dbClient.rawQuery('SELECT * FROM habit_goals where habit_id = ?', [id.toString()]);
-   HabitGoal goal = new HabitGoal(list[0]["id"], id, list[0]["timeFrame"], list[0]["goalValue"], list[0]["active"], list[0]["handicap"]);
+    List<Map> habitGoal = await dbClient.rawQuery('SELECT * FROM habit_goals where habit_id = ?', [id.toString()]);
+   HabitGoal goal = new HabitGoal(id: habitGoal[0]["id"], habitId: id, goalStart: habitGoal[0]["goalStart"], goalEnd: habitGoal[0]["goalEnd"], timeFrame: habitGoal[0]["timeFrame"], goalValue: habitGoal[0]["goalValue"], handicap: habitGoal[0]["handicap"]);
     return goal;
   }
   
   getIdforNewHabit() async{
     var dbClient = await db;
     var res = await dbClient.rawQuery('Select max(id)+1 as id from habits');
-    return res[0]["id"];
+    print('id is ');
+    int id = res[0]["id"];
+    print(id.toString());
+    if (id == null)
+      id = 1;
+    print(id.toString());
+    return id;
   }
-
-  getIdforNewHabitGoal() async{
-    var dbClient = await db;
-    var res = await dbClient.rawQuery('Select max(id)+1 as id from habit_goals');
-    return res[0]["id"];
-  }
-
 
   newHabit(Habit habit) async {
+    print('--------');
+    print('going to create a new habit');
+    print(habit.id.toString());
+    print(habit.description);
+    print(habit.notes);
+    print('goal info, first one should be null');
+    print(habit.goal.id);
+    print(habit.goal.goalValue);
+    print(habit.goal.timeFrame);
+    print(habit.goal.handicap);
+    print('--------');
     var dbClient = await db;
     var res = await dbClient.rawInsert(
           'INSERT INTO habits(description, notes) ' 
           'VALUES(?,?)', [habit.description, habit.notes]);
     print('insert returned ');
     print(res);
+   newHabitGoal(habit.goal);
     return res;
   }
 
   newHabitGoal(HabitGoal habitGoal) async {
     var dbClient = await db;
+    String startDateTime = DateTime.now().toIso8601String();
     var res = await dbClient.rawInsert(
-          'INSERT INTO habits(habitId, timeFrame, goalValue, active, handicap) ' 
-          'VALUES(?, ?, ?, ?, ?, ?) ', [habitGoal.habitId, habitGoal.timeFrame, habitGoal.goalValue, 1, habitGoal.handicap]);
+          'INSERT INTO habit_goals(habitId, goalStart, goalEnd, timeFrame, goalValue, handicap) ' 
+          'VALUES(?, ?, null, ?, ?, ?) ', [habitGoal.habitId, startDateTime,  habitGoal.timeFrame, habitGoal.goalValue, habitGoal.handicap]);
     print('insert returned ');
     print(res);
     return res;
@@ -132,12 +160,17 @@ class DBHelper{
     return res;
   }
   
+  // To edit we're going to mark the old goal as ended, and create a new goal
+  // This will allow the history to only be graded against what goal was active
+  // at that time. 
   editHabitGoal(HabitGoal habitGoal) async {
     var dbClient = await db;
+    String endNow =DateTime.now().toIso8601String();
     var res = await dbClient.rawUpdate(
           'UPDATE habit_goal ' 
-          'SET timeFrame=?, goalValue=?, active =?,   handicap = ?  '
-          'WHERE id = ?', [habitGoal.timeFrame, habitGoal.goalValue, habitGoal.active,  habitGoal.handicap, habitGoal.id]);
+          'SET goalEnd=? '
+          'WHERE id = ?', [endNow, habitGoal.id]);
+    newHabitGoal(habitGoal);
     print('edit returned ');
     print(res);
     return res;
