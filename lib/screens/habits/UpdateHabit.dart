@@ -12,7 +12,7 @@ class UpdateHabit extends StatefulWidget {
 
 
   @override
-  _UpdateHabitState createState() => new _UpdateHabitState();
+  _UpdateHabitState createState() => new _UpdateHabitState(habit);
 }
 
 class _UpdateHabitState extends State<UpdateHabit> {
@@ -34,7 +34,7 @@ class _UpdateHabitState extends State<UpdateHabit> {
     String description;
     String notes;
     
-    int goalid;
+    int goalId;
     String timeFrame;
     int goalValue;
     String handicap;
@@ -45,14 +45,14 @@ class _UpdateHabitState extends State<UpdateHabit> {
     navigateToPrevScreen() {
       Navigator.pop(context);
     }
-     _UpdateHabitState(){
-        id = this.widget.habit.id;
-        description = this.widget.habit.description;
-        notes = this.widget.habit.notes;
-        goalid = this.widget.habit.goal.id;
-        timeFrame = this.widget.habit.goal.timeFrame;
-        goalValue = this.widget.habit.goal.goalValue;
-        handicap = this.widget.habit.goal.handicap;
+     _UpdateHabitState(Habit habit){
+        id = habit.id;
+        description = habit.description;
+        notes = habit.notes;
+        goalId = habit.goal.id;
+        timeFrame = habit.goal.timeFrame;
+        goalValue = habit.goal.goalValue;
+        handicap = habit.goal.handicap;
     }
     
     @override
@@ -60,7 +60,7 @@ class _UpdateHabitState extends State<UpdateHabit> {
       return new Scaffold(
         key: scaffoldKey,
         appBar: new AppBar(
-          title: new Text('Edit Habbit'),
+          title: new Text('Edit Habit'),
           actions: <Widget> [
             new IconButton(
               icon: const Icon(Icons.cancel),
@@ -151,7 +151,7 @@ class _UpdateHabitState extends State<UpdateHabit> {
                     _saveHabit();
                     //navigateToPrevScreen();  
                   },
-                  child: new Text('Add Habit'),
+                  child: new Text('Save Changes'),
                   ),
                   )
               ],
@@ -171,12 +171,10 @@ class _UpdateHabitState extends State<UpdateHabit> {
         }
 
         var _db = db.DBHelper();
-        print(timeFrame);
-        print(goalValue.toString());
-        print(handicap);
         
-        var habitGoal = HabitGoal(habitId: id,  timeFrame: timeFrame, goalValue: goalValue, handicap: handicap);
-        var habit = Habit(description: description, notes: notes, goal: habitGoal);
+        var habitGoal = HabitGoal(id: goalId, habitId: id,  timeFrame: timeFrame, goalValue: goalValue, handicap: handicap);
+        var habit = Habit(id: id, description: description, notes: notes, goal: habitGoal);
+        print('in saveHabit, about to send '+ habit.prettyPrint());
         _db.editHabit(habit);
         navigateToPrevScreen();  
       }

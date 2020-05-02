@@ -71,8 +71,12 @@ class DBHelper{
 
     Future<HabitGoal> getHabitGoalById(int id) async {
     var dbClient = await db;
-    List<Map> habitGoal = await dbClient.rawQuery('SELECT * FROM habit_goals where habit_id = ?', [id.toString()]);
-   HabitGoal goal = new HabitGoal(id: habitGoal[0]["id"], habitId: id, goalStart: habitGoal[0]["goalStart"], goalEnd: habitGoal[0]["goalEnd"], timeFrame: habitGoal[0]["timeFrame"], goalValue: habitGoal[0]["goalValue"], handicap: habitGoal[0]["handicap"]);
+    print('getting goal for id '+ id.toString());
+
+    List<Map> habitGoal = await dbClient.rawQuery('SELECT * FROM habit_goals where habitId = ?', [id.toString()]);
+    HabitGoal goal = new HabitGoal(id: habitGoal[0]["id"], habitId: id, goalStart: habitGoal[0]["goalStart"], goalEnd: habitGoal[0]["goalEnd"], timeFrame: habitGoal[0]["timeFrame"], goalValue: habitGoal[0]["goalValue"], handicap: habitGoal[0]["handicap"]);
+   
+    print('retrieved habit goal ' + goal.prettyPrint());
     return goal;
   }
   
@@ -159,6 +163,9 @@ class DBHelper{
 
   editHabit(Habit habit) async {
     var dbClient = await db;
+    print('--------');
+    print('going to edit a habit: ' + habit.prettyPrint());
+    print('--------');
 
     var res = await dbClient.rawUpdate(
           'UPDATE habits ' 
@@ -168,6 +175,7 @@ class DBHelper{
     print('edit returned ');
     print(res);
     var currentHabitGoal = await getHabitGoalById(habit.id);
+    print('goal before change, if needed: '+ currentHabitGoal.toString());
     // if there was a change to the goal, update the goal, otherwise, we're done
     if (currentHabitGoal.goalValue != habit.goal.goalValue || currentHabitGoal.timeFrame != habit.goal.timeFrame || currentHabitGoal.handicap != habit.goal.handicap) {
       editHabitGoal(habit.goal);
@@ -181,9 +189,11 @@ class DBHelper{
   // at that time. 
   editHabitGoal(HabitGoal habitGoal) async {
     var dbClient = await db;
+    print('new goal '+ habitGoal.prettyPrint());
+
     String endNow =DateTime.now().toIso8601String();
     var res = await dbClient.rawUpdate(
-          'UPDATE habit_goal ' 
+          'UPDATE habit_goals ' 
           'SET goalEnd=? '
           'WHERE id = ?', [endNow, habitGoal.id]);
     newHabitGoal(habitGoal);

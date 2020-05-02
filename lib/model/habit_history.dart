@@ -16,4 +16,8 @@ class HabitHistory {
       'notes': notes,
     };
   }
+
+  prettyPrint(){
+    return 'id: '+id.toString()+', habitId: '+ habitId.toString() + ', date: '+ date.toIso8601String() + ', value: ' + value.toString() + ', notes: '+ notes;
+  }
 }

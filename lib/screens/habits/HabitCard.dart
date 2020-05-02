@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:habithatcher/database/database.dart' as db;
 import 'package:habithatcher/model/habit.dart';
+import 'package:habithatcher/screens/habits/UpdateHabit.dart';
+import 'package:habithatcher/screens/history/AddHistory.dart';
 
 class HabitCard extends StatelessWidget{
 
@@ -22,7 +24,19 @@ final List<CustomPopupMenu> choices = <CustomPopupMenu>[
     return 
       Card(
         child: ListTile(
-        leading: Icon(Icons.add_circle_outline, size: 48.0),
+        leading: IconButton( icon: Icon(Icons.add_circle_outline, size: 48.0), tooltip: 'Log activity', onPressed: (){
+          print("about to pass habit id " + habit.id.toString());
+          
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => new AddHabitHistory(habit: habit),
+              settings: RouteSettings(
+              arguments: habit,
+            ),
+          )
+          );
+        }),
         title: Text(habit.description),                  
         subtitle: (habit.goal != null) ? Text(
           habit.goal.handicap + ": " + habit.goal.goalValue.toString() + " per " + habit.goal.timeFrame
@@ -45,7 +59,11 @@ final List<CustomPopupMenu> choices = <CustomPopupMenu>[
               print(habit.goal.timeFrame);
               print(value.action);
               if (value.action == 'edit') {
-                print('edit goes here');
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => new UpdateHabit(habit: habit,))
+                );
+                refreshParent();
               } else if (value.action == 'delete') {
                 print('delete goes here');
                 dbHelper.deleteHabit(habit);

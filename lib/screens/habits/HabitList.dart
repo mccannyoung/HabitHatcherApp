@@ -56,8 +56,8 @@ reload(){
             ListView.builder(
               itemCount: snapshot.data.length, 
               itemBuilder: (context, index){
-              Habit habit = snapshot.data[index];              
-              return  HabitCard(habit: habit,  refreshParent: reload);
+                Habit habit = snapshot.data[index];              
+                return  HabitCard(habit: habit,  refreshParent: reload);
               }
             )   
         );
