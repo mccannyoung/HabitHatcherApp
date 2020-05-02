@@ -36,12 +36,21 @@ reload(){
 
   @override 
   Widget build(BuildContext context) {
-    return  FutureBuilder (
+    return  Scaffold( 
+      appBar: AppBar(title: Text("Habits"),),
+      body: FutureBuilder (
         builder:  (context,  snapshot) {     
+          
         if (snapshot.data==null || snapshot.hasData == false) {
-          return Container( child: new Text("loading data"),); 
+          return 
+          Container( 
+            child: 
+            Center( 
+              child: new Text("loading data"),
+            ),
+          ); 
         }
-        return 
+        return snapshot.data.isEmpty ? Container( child: Center(child: Text('Please add a habit')) ): 
         Container(
           child: 
             ListView.builder(
@@ -54,6 +63,7 @@ reload(){
         );
         },
         future: loadHabitData(),
+    ),
     );
 }
 }

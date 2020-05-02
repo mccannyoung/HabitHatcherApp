@@ -120,7 +120,17 @@ class DBHelper{
     print(res);
     return res;
   }
-
+  
+ addHabitHistory(HabitHistory history) async {
+   var dbClient = await db;
+   //  'CREATE TABLE habit_history(id INTEGER PRIMARY KEY, habitId INTEGER NOT NULL,  date TEXT NOT NULL, value INTEGER NOT NULL, notes TEXT)'
+  var res = await dbClient.rawInsert(
+    'INSERT INTO  habit_history (habitId, date, value, notes) '
+    'VALUES(?, ?, ?, ?)', [history.habitId, history.date.toIso8601String(), history.value, history.notes]);
+    print('insert returned ');
+    print(res);
+    return res;
+ }
 
   // This is a cheap hack of a cascade delete 
   deleteHabit(Habit habit) async {
@@ -157,6 +167,12 @@ class DBHelper{
     
     print('edit returned ');
     print(res);
+    var currentHabitGoal = await getHabitGoalById(habit.id);
+    // if there was a change to the goal, update the goal, otherwise, we're done
+    if (currentHabitGoal.goalValue != habit.goal.goalValue || currentHabitGoal.timeFrame != habit.goal.timeFrame || currentHabitGoal.handicap != habit.goal.handicap) {
+      editHabitGoal(habit.goal);
+    }
+
     return res;
   }
   

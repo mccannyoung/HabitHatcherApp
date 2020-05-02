@@ -28,21 +28,22 @@ class _AddHabitState extends State<AddHabit> {
     'Impossible'
   ];
 
+    // Habit values
     int id;
     String description;
     String notes;
-    
-    int goalid;
+    //HabitGoal values
     String timeFrame;
     int goalValue;
-    bool active;
     String handicap;
 
     final scaffoldKey = new GlobalKey<ScaffoldState>();
     final formKey = new GlobalKey<FormState>();
+    
     navigateToPrevScreen() {
       Navigator.pop(context);
     }
+    
     @override
     Widget build(BuildContext context){
       return new Scaffold(
