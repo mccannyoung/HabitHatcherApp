@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-//import 'package:flutter/rendering.dart';
+
 import 'package:habithatcher/model/habit.dart';
 
 import 'package:habithatcher/database/database.dart' as db;
@@ -65,5 +65,5 @@ reload(){
         future: loadHabitData(),
     ),
     );
-}
+  }
 }

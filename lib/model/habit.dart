@@ -21,6 +21,8 @@ class Habit {
   }
 
   prettyPrint(){
-    return 'id: '+ id.toString() + ', description: '+ description + ', notes: '+ notes + ' goal: '+ goal.prettyPrint();
+    String historyStr =  '';
+    history.forEach((log) => historyStr = historyStr + log.prettyPrint());
+    return 'id: '+ id.toString() + ', description: '+ description + ', notes: '+ notes + ' goal: '+ goal.prettyPrint() + ' history: ' + historyStr; 
   }
 }

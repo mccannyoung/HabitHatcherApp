@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
-//import 'package:flutter_rounded_date_picker/rounded_picker.dart';
-
 import 'package:habithatcher/model/habit.dart';
 import 'package:habithatcher/model/habit_history.dart';
 

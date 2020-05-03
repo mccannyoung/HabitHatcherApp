@@ -57,9 +57,14 @@ class DBHelper{
       }
       List<Map> habitHistories = await dbClient.rawQuery('SELECT * FROM habit_history WHERE  habitId =?',  [habitId.toString()]);
       List<HabitHistory> history = new List();
-      if (history.length > 0) {
+      print('A history was found of length '+ habitHistories.length.toString());
+
+      if (habitHistories.length > 0) {
         for (int j=0; j < habitHistories.length; j++){
-            history.add(new HabitHistory(id : habitHistories[j]["id"], habitId: habitHistories[j]["habitId"], date: habitHistories[j]["date"], value: habitHistories[j]["value"], notes: habitHistories[j]["notes"]));
+          
+            HabitHistory newHistory = new HabitHistory(id : habitHistories[j]["id"], habitId: habitHistories[j]["habitId"], date: DateTime.parse(habitHistories[j]["date"]), value: habitHistories[j]["value"], notes: habitHistories[j]["notes"]);
+            print(newHistory.prettyPrint());  
+            history.add(newHistory);
         }
       }
         habits.add(new Habit( id: list[i]["id"], description: list[i]["description"], notes: list[i]["notes"], goal: goal, history: history));
@@ -127,10 +132,10 @@ class DBHelper{
   
  addHabitHistory(HabitHistory history) async {
    var dbClient = await db;
-   //  'CREATE TABLE habit_history(id INTEGER PRIMARY KEY, habitId INTEGER NOT NULL,  date TEXT NOT NULL, value INTEGER NOT NULL, notes TEXT)'
-  var res = await dbClient.rawInsert(
-    'INSERT INTO  habit_history (habitId, date, value, notes) '
-    'VALUES(?, ?, ?, ?)', [history.habitId, history.date.toIso8601String(), history.value, history.notes]);
+  print('Adding habit history: '+ history.prettyPrint());
+    var res = await dbClient.rawInsert(
+      'INSERT INTO  habit_history (habitId, date, value, notes) '
+      'VALUES(?, ?, ?, ?)', [history.habitId, history.date.toIso8601String(), history.value, history.notes]);
     print('insert returned ');
     print(res);
     return res;
@@ -213,6 +218,24 @@ class DBHelper{
     print('edit returned ');
     print(res);
     return res;
+  }
+  
+  deleteHabitHistoryById(int id) async {
+
+    var dbClient = await db;
+    
+    var res = await dbClient.rawDelete(
+          'DELETE FROM habit_history ' 
+          'WHERE id = ?', [id.toString()]
+          );
+    print('delete habit history returned ');
+    print(res);
+    return res;   
+  }
+
+  calculateHatchValueForHabit(int id){
+    
+    return 0;
   }
 
 }

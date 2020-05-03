@@ -3,6 +3,7 @@ import 'package:habithatcher/database/database.dart' as db;
 import 'package:habithatcher/model/habit.dart';
 import 'package:habithatcher/screens/habits/UpdateHabit.dart';
 import 'package:habithatcher/screens/history/AddHistory.dart';
+import 'package:habithatcher/screens/history/HistoryList.dart';
 
 class HabitCard extends StatelessWidget{
 
@@ -70,6 +71,11 @@ final List<CustomPopupMenu> choices = <CustomPopupMenu>[
                 refreshParent();
               } else {
                 print('history goes here');
+                print(habit.prettyPrint());
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => new HistoryList(history: habit.history, habitId: habit.id,))
+                );
               }
             },
             itemBuilder: (BuildContext context) {
