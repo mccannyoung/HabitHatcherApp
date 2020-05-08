@@ -1,11 +1,10 @@
-import 'package:flutter_svg/flutter_svg.dart';
-
 import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:habithatcher/screens/habits/AddHabit.dart';
 import 'package:habithatcher/screens/habits/HabitList.dart';
+import 'package:habithatcher/screens/animations/egg_animation.dart';
 
 const List<String> quotes = [
 ' "We become what we repeatedly do."\n\n\t - Sean Covey',
@@ -51,9 +50,12 @@ class _MyHomePageState extends State<MyHomePage> {
              Text(
                  quotes[random.nextInt(quotes.length)].toString(),
              ),
-             SvgPicture.asset(
-                 assetNames[0]
-               ),
+             EggAnimation(),
+              // SvgPicture.asset(
+              //    assetNames[0]
+              //   ),
+             
+            
                MaterialButton(
                  child: Text('Go to Your Habits'),
                  onPressed: () {
