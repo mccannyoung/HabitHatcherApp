@@ -28,8 +28,7 @@ const List<String> assetNames = <String>[
 var random = new Random.secure();
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
-  final String title;
+  MyHomePage({Key key}) : super(key: key);
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
@@ -51,21 +50,15 @@ class _MyHomePageState extends State<MyHomePage> {
                  quotes[random.nextInt(quotes.length)].toString(),
              ),
              EggAnimation(),
-              // SvgPicture.asset(
-              //    assetNames[0]
-              //   ),
-             
-            
-               MaterialButton(
-                 child: Text('Go to Your Habits'),
-                 onPressed: () {
-                       Navigator.push(
-                         context,
-                         MaterialPageRoute(builder: (context) => new HabitList())
-                       );
-                 }
-               ),
-             // HabitListWidget(),
+              MaterialButton(
+                child: Text('Go to Your Habits'),
+                onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => new HabitList())
+                      );
+                }
+              ),
               new Align(
                  alignment: FractionalOffset.bottomCenter,
                  child: 
