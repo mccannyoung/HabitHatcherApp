@@ -150,7 +150,7 @@ class DBHelper {
     return goal;
   }
 
-  getIdforNewHabit() async {
+  Future<int> getIdforNewHabit() async {
     var dbClient = await db;
     var res = await dbClient.rawQuery('Select max(id)+1 as id from habits');
     print('id is ');
@@ -193,21 +193,24 @@ class DBHelper {
   }
 
   newHabitGoal(HabitGoal habitGoal) async {
-    var dbClient = await db;
-    DateTime startDateTime = _getTodaysDate();
-    var res = await dbClient.rawInsert(
-        'INSERT INTO habit_goals(habitId, goalStart, goalEnd, timeFrame, goalValue, handicap) '
-        'VALUES(?, ?, null, ?, ?, ?) ',
-        [
-          habitGoal.habitId,
-          _date2String(startDateTime),
-          habitGoal.timeFrame,
-          habitGoal.goalValue,
-          habitGoal.handicap
-        ]);
-    print('insert habit goal returned ');
-    print(res);
-    return res;
+    if (habitGoal.goalValue != null){
+      var dbClient = await db;
+      DateTime startDateTime = _getTodaysDate();
+      var res = await dbClient.rawInsert(
+          'INSERT INTO habit_goals(habitId, goalStart, goalEnd, timeFrame, goalValue, handicap) '
+          'VALUES(?, ?, null, ?, ?, ?) ',
+          [
+            habitGoal.habitId,
+            _date2String(startDateTime),
+            habitGoal.timeFrame,
+            habitGoal.goalValue,
+            habitGoal.handicap
+          ]);
+      print('insert habit goal returned ');
+      print(res);
+      return res;
+    }
+    return 0;
   }
 
   addHabitHistory(HabitHistory history) async {

@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:habithatcher/screens/habits/AddHabit.dart';
+import 'package:habithatcher/screens/habits/habit/HabitScreen.dart';
 import 'package:habithatcher/screens/habits/HabitList.dart';
 import 'package:habithatcher/screens/animations/egg_animation.dart';
 
@@ -67,7 +67,7 @@ class _MyHomePageState extends State<MyHomePage> {
                      onPressed: () {
                        Navigator.push(
                          context,
-                         MaterialPageRoute(builder: (context) => new AddHabit())
+                         MaterialPageRoute(builder: (context) => new HabitScreen())
                        );
                      }
                    ),

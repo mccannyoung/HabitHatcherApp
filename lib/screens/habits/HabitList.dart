@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import 'package:habithatcher/model/habit.dart';
-import 'package:habithatcher/screens/habits/AddHabit.dart';
+import 'package:habithatcher/screens/habits/habit/HabitScreen.dart';
 import 'package:habithatcher/database/database.dart' as db;
 import 'package:habithatcher/screens/habits/HabitCard.dart';
 
@@ -78,7 +78,7 @@ class _HabitListState extends State<HabitList> {
           child: Icon(Icons.add_circle_outline),
           onPressed: () {
             Navigator.push(context,
-                MaterialPageRoute(builder: (context) => new AddHabit()));
+                MaterialPageRoute(builder: (context) => new HabitScreen()));
           }),
     );
   }

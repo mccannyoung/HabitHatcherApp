@@ -52,7 +52,7 @@ class _HabitCardState extends State<HabitCard> {
                 this.widget.habit.goal.goalValue.toString() +
                 " per " +
                 this.widget.habit.goal.timeFrame.toString())
-            : Text("no goal set? "),
+            : Text("No goal, add one if you'd like but not required"),
         trailing: PopupMenuButton<CustomPopupMenu>(
             elevation: 0.0,
             //initialValue:  choices[1],

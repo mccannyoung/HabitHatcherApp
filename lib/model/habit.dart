@@ -4,14 +4,14 @@ import 'package:habithatcher/model/habit_reminder.dart';
 
 class Habit {
   
-  final int id;
-  final String description;
-  final String notes;
-  final HabitGoal goal;
-  final List<HabitHistory> history;
-  final int sortOrder;
-  final List<String> colors;
-  final List<HabitReminder> reminders;
+  int id;
+  String description;
+  String notes;
+  HabitGoal goal;
+  List<HabitHistory> history;
+  int sortOrder;
+  List<String> colors;
+  List<HabitReminder> reminders;
 
   Habit({this.id, this.description, this.notes, this.goal, this.history, this.sortOrder, this.colors, this.reminders});
   

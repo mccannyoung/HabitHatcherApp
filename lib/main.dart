@@ -8,7 +8,6 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 import 'package:habithatcher/screens/home/Introduction.dart';
 import 'package:habithatcher/screens/home/MyHomePage.dart';
-import 'package:habithatcher/screens/animations/egg_animation.dart';
 
 void main() => runApp(new MaterialApp(home: MyApp()));
 
@@ -27,35 +26,39 @@ class _MyAppState extends State<MyApp> {
   @override 
   void initState() {
     super.initState();
-    flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
-    var android = new AndroidInitializationSettings('mipmap/ic_launcher');
-    var iOs = new IOSInitializationSettings();
-    var initSettings = new InitializationSettings(android, iOs);
-    flutterLocalNotificationsPlugin.initialize(initSettings, onSelectNotification: onSelectNotification);
+    // flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
+    // var android = new AndroidInitializationSettings('mipmap/ic_launcher');
+    // var iOs = new IOSInitializationSettings();
+    // var initSettings = new InitializationSettings(android, iOs);
+    // flutterLocalNotificationsPlugin.initialize(initSettings, onSelectNotification: onSelectNotification);
 
   }
 
-  Future onSelectNotification(String payload){
+//  Future 
+onSelectNotification(String payload){
       debugPrint("payload: $payload");
       showDialog(context: context, builder: (_)=> new AlertDialog(title: new Text('Payload'), content: new Text('$payload')));
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold (
-      appBar: new AppBar( 
-        title: new Text('Hatch a New Habit'),
-      //theme: ThemeData(
-       //primarySwatch: Colors.blueGrey,
-      ),
-      body: new Column (
+    return 
+    
+    MaterialApp(
+      title: 'Hatch a New Habit',
+      theme: ThemeData(
+        primarySwatch: Colors.blueGrey,
+        
+    ),
+          home: new Splash(), 
+      //body: new Column (
 
-        children:[ EggAnimation(),
-        new RaisedButton(onPressed: showNotification, 
-        child: new Text('Demo', style: Theme.of(context).textTheme.headline3),),
-        ]
-      ),
-      //home: new Splash(), // Not realy home, but it's the first spot we're going. 
+//        children:[ EggAnimation(),
+  //      new RaisedButton(onPressed: showNotification, 
+    //  child: new Text('Demo', style: Theme.of(context).textTheme.headline3),),
+      //  ]
+     // ),
+// Not realy home, but it's the first spot we're going. 
     );
     }
     showNotification() async {
