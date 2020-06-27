@@ -66,7 +66,7 @@ class _HabitGoalScreenState extends State<HabitGoalScreen> {
                     },
                     validator: (int value) {
                       print('or here?');
-                        if (value < 0 && this.goal.timeFrame != null) {
+                        if (value == null && this.goal.timeFrame != null) {
                           return 'Please pick a value';
                         }
                         return null;

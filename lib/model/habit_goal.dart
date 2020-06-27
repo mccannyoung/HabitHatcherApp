@@ -1,6 +1,6 @@
 class HabitGoal {
   final int id;
-  final int habitId;
+  int habitId;
   final DateTime goalStart;
   final DateTime goalEnd;
   final String timeFrame;

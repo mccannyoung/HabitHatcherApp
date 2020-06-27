@@ -162,6 +162,11 @@ class DBHelper {
   }
 
   newHabit(Habit habit) async {
+    if(habit.id == null)
+      habit.id = await getIdforNewHabit(); 
+    if (habit.goal != null)
+      habit.goal.habitId= habit.id;
+      
     print('going to create a new habit: ' + habit.prettyPrint());
 
     var dbClient = await db;

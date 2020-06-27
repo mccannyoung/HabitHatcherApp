@@ -12,7 +12,7 @@ import 'package:habithatcher/model/habit_reminder.dart';
 import 'package:habithatcher/database/database.dart' as db;
 
 class HabitScreen extends StatefulWidget {
-  Habit habit;
+  final Habit habit;
   final int tabOpen;
 
   HabitScreen({Key key, this.habit, this.tabOpen =0}) : super(key: key);
@@ -23,6 +23,7 @@ class HabitScreen extends StatefulWidget {
 
 class _HabitScreenState extends State<HabitScreen> {
   int displayOption;
+  Habit habit;
 
   final scaffoldKey = new GlobalKey<ScaffoldState>();
   final formKey = new GlobalKey<FormState>();
@@ -31,32 +32,23 @@ class _HabitScreenState extends State<HabitScreen> {
     Navigator.pop(context);
   }
 
-  void _getNewIdForHabit() async {
-    var _db = db.DBHelper();
-    setState(() async {
-      if (this.widget.habit == null) {
-        this.widget.habit = new Habit();  
-        this.widget.habit.id = await _db.getIdforNewHabit();
-      }
-    });
-  }
-
-  updateGeneral(Habit uHabit) {
+  updateGeneral(Habit uHabit) async {
+    print("Updating habit  in HS" + uHabit.prettyPrint());
     setState(() {
-      this.widget.habit.description = uHabit.description;
-      this.widget.habit.notes = uHabit.notes;
+      habit.description = uHabit.description;
+      habit.notes = uHabit.notes;
     });
   }
 
   updateGoal(HabitGoal goalUpdated) {
     setState(() {
-      this.widget.habit.goal = goalUpdated;
+      habit.goal = goalUpdated;
     });
   }
 
   updateReminders(List<HabitReminder> reminders) {
     setState(() {
-      this.widget.habit.reminders = reminders;
+      habit.reminders = reminders;
     });
   }
 
@@ -65,8 +57,12 @@ class _HabitScreenState extends State<HabitScreen> {
   void initState() {
     super.initState();
     // If the habit isn't set, create a new one if it isn't.
-    if (this.widget.habit == null) _getNewIdForHabit();
-
+    Habit myHabit = this.widget.habit;
+    if (myHabit == null) 
+      myHabit = new Habit();
+    setState(() {
+      habit = myHabit;
+    });
     displayOption = 0;
   }
 
@@ -81,10 +77,7 @@ class _HabitScreenState extends State<HabitScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if (this.widget.habit == null || this.widget.habit.id == null)
-      _getNewIdForHabit();
-    if (this.widget.habit.goal == null)
-      this.widget.habit.goal = new HabitGoal(habitId: this.widget.habit.id);
+    
     return new Scaffold(
       key: scaffoldKey,
       appBar: new AppBar(title: new Text('Add a New Habit'), actions: <Widget>[
@@ -105,14 +98,14 @@ class _HabitScreenState extends State<HabitScreen> {
             new Visibility(
               visible: (displayOption == 0),
               child: new HabitGeneral(
-                habit: this.widget.habit,
+                habit: habit,
                 updateFn: updateGeneral,
               ),
             ),
             new Visibility(
               visible: (displayOption == 1),
               child: new HabitGoalScreen(
-                habitGoal: this.widget.habit.goal,
+                habitGoal: habit.goal,
                 updateGoal: updateGoal,
               ),
             ),
@@ -123,7 +116,7 @@ class _HabitScreenState extends State<HabitScreen> {
             new Visibility(
               visible: (displayOption == 3),
               child: new HabitReminderScreen(
-                reminders: this.widget.habit.reminders,
+                reminders: habit.reminders,
               ),
             ),
             new Container(
@@ -166,10 +159,10 @@ class _HabitScreenState extends State<HabitScreen> {
     } else {
       return null;
     }
-    print(this.widget.habit.goal.prettyPrint());
+    print(habit.goal.prettyPrint());
 
     var _db = db.DBHelper();
-    _db.newHabit(this.widget.habit);
+    _db.newHabit(habit);
     _showSuccessDialog();
     //_navigateToPrevScreen();
   }
