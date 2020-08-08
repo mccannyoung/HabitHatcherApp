@@ -21,7 +21,7 @@ class HabitGeneral extends StatelessWidget {
                 onChanged: (val) {
                   print("in HG onChanged");
                   this.habit.description = val;
-                this.updateFn(this.habit);    
+                  this.updateFn(this.habit);    
                 },
             onSaved: (val) {
               print("in HG onSaved");

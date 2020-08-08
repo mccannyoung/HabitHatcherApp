@@ -42,6 +42,8 @@ onSelectNotification(String payload){
 
   @override
   Widget build(BuildContext context) {
+    final Brightness brightness = MediaQuery.of(context).platformBrightness;
+    bool isDark = brightness == Brightness.dark;
     return 
     
     MaterialApp(
@@ -50,15 +52,12 @@ onSelectNotification(String payload){
         primarySwatch: Colors.blueGrey,
         
     ),
+    darkTheme:  ThemeData(
+      accentColor: Colors.blueGrey,
+      backgroundColor: Colors.grey,
+      primarySwatch: Colors.deepPurple,
+    ),
           home: new Splash(), 
-      //body: new Column (
-
-//        children:[ EggAnimation(),
-  //      new RaisedButton(onPressed: showNotification, 
-    //  child: new Text('Demo', style: Theme.of(context).textTheme.headline3),),
-      //  ]
-     // ),
-// Not realy home, but it's the first spot we're going. 
     );
     }
     showNotification() async {

@@ -15,9 +15,8 @@ class HabitScreen extends StatefulWidget {
   final Habit habit;
   final int tabOpen;
 
-  HabitScreen({Key key, this.habit, this.tabOpen =0}) : super(key: key);
+  HabitScreen({Key key, this.habit, this.tabOpen = 0}) : super(key: key);
   @override
-  
   _HabitScreenState createState() => new _HabitScreenState();
 }
 
@@ -46,7 +45,18 @@ class _HabitScreenState extends State<HabitScreen> {
     });
   }
 
+  updateColors(List<String> colorList) {
+    setState(() {
+      habit.colors = colorList;
+    });
+  }
+
   updateReminders(List<HabitReminder> reminders) {
+    print('in update reminders');
+    print('I got passed');
+    reminders.forEach((element) {
+      print(element.toString());
+    });
     setState(() {
       habit.reminders = reminders;
     });
@@ -58,8 +68,7 @@ class _HabitScreenState extends State<HabitScreen> {
     super.initState();
     // If the habit isn't set, create a new one if it isn't.
     Habit myHabit = this.widget.habit;
-    if (myHabit == null) 
-      myHabit = new Habit();
+    if (myHabit == null) myHabit = new Habit();
     setState(() {
       habit = myHabit;
     });
@@ -70,14 +79,12 @@ class _HabitScreenState extends State<HabitScreen> {
     print('got passed in screen number ');
     print(screen.toString());
     setState(() {
-      this.displayOption = screen;  
+      this.displayOption = screen;
     });
-    
   }
 
   @override
   Widget build(BuildContext context) {
-    
     return new Scaffold(
       key: scaffoldKey,
       appBar: new AppBar(title: new Text('Add a New Habit'), actions: <Widget>[
@@ -111,12 +118,16 @@ class _HabitScreenState extends State<HabitScreen> {
             ),
             new Visibility(
               visible: (displayOption == 2),
-              child: new HabitColors(),
+              child: new HabitColors(
+                habitColors: habit.colors,
+                updateColors: updateColors,
+              ),
             ),
             new Visibility(
               visible: (displayOption == 3),
               child: new HabitReminderScreen(
                 reminders: habit.reminders,
+                updateReminders: updateReminders,
               ),
             ),
             new Container(
@@ -159,7 +170,7 @@ class _HabitScreenState extends State<HabitScreen> {
     } else {
       return null;
     }
-    print(habit.goal.prettyPrint());
+    if (habit.goal != null) print(habit.goal.prettyPrint());
 
     var _db = db.DBHelper();
     _db.newHabit(habit);

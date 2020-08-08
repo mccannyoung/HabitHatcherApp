@@ -56,8 +56,9 @@ class DBHelper {
   _getRemindersByHabitId(int habitId) async {
     var dbClient = await db;
 
-    List<Map> list = await dbClient
-        .rawQuery('SELECT * FROM habit_reminders WHERE habitId = ?', [habitId.toString()]);
+    List<Map> list = await dbClient.rawQuery(
+        'SELECT * FROM habit_reminders WHERE habitId = ?',
+        [habitId.toString()]);
     List<HabitReminder> reminders;
     if (list.length > 0) {
       for (int i = 0; i < list.length; i++) {
@@ -118,13 +119,13 @@ class DBHelper {
         }
         List<HabitReminder> reminders = await _getRemindersByHabitId(habitId);
         habits.add(new Habit(
-            id: list[i]["id"],
-            description: list[i]["description"],
-            notes: list[i]["notes"],
-            goal: goal,
-            history: history,
-            reminders:  reminders,
-            ));
+          id: list[i]["id"],
+          description: list[i]["description"],
+          notes: list[i]["notes"],
+          goal: goal,
+          history: history,
+          reminders: reminders,
+        ));
       }
       print(habits.length);
     }
@@ -162,11 +163,9 @@ class DBHelper {
   }
 
   newHabit(Habit habit) async {
-    if(habit.id == null)
-      habit.id = await getIdforNewHabit(); 
-    if (habit.goal != null)
-      habit.goal.habitId= habit.id;
-      
+    if (habit.id == null) habit.id = await getIdforNewHabit();
+    if (habit.goal != null) habit.goal.habitId = habit.id;
+
     print('going to create a new habit: ' + habit.prettyPrint());
 
     var dbClient = await db;
@@ -176,29 +175,38 @@ class DBHelper {
         [habit.description, habit.notes]);
     print('insert returned ');
     print(res);
-    newHabitGoal(habit.goal);
+    if (habit.goal != null) newHabitGoal(habit.goal);
     return res;
   }
 
   newHabitReminder(HabitReminder reminder) async {
     if (reminder != null)
-      print('going to create new reminder for habit '+ reminder.habitId.toString());
+      print('going to create new reminder for habit ' +
+          reminder.habitId.toString());
     else {
       print('was passed null reminder, fix this');
       return;
     }
     var dbClient = await db;
     // timeOfDay TEXT, dayOfWeek INTEGER, weekOfMonth INTEGER, dayOfMonth INTEGER, monthOfYear INTEGER
-    var res = await dbClient.rawInsert('INSERT INTO habit_reminders (habitId, timeOfDay, dayOfWeek, weekOfMonth, dayOfMonth, monthOfYear) '
-    ' Values(?,?,?, ?, ?, ?) ', [reminder.habitId, reminder.timeOfDay, reminder.dayOfWeek, reminder.weekOfMonth, reminder.dayOfMonth, reminder.monthOfYear]);
+    var res = await dbClient.rawInsert(
+        'INSERT INTO habit_reminders (habitId, timeOfDay, dayOfWeek, weekOfMonth, dayOfMonth, monthOfYear) '
+        ' Values(?,?,?, ?, ?, ?) ',
+        [
+          reminder.habitId,
+          reminder.timeOfDay,
+          reminder.dayOfWeek,
+          reminder.weekOfMonth,
+          reminder.dayOfMonth,
+          reminder.monthOfYear
+        ]);
     print('insert returned ');
     print(res);
     return res;
-
   }
 
   newHabitGoal(HabitGoal habitGoal) async {
-    if (habitGoal.goalValue != null){
+    if (habitGoal.goalValue != null) {
       var dbClient = await db;
       DateTime startDateTime = _getTodaysDate();
       var res = await dbClient.rawInsert(

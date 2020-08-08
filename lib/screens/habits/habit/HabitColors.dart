@@ -1,18 +1,39 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class HabitColors extends StatefulWidget {
-  HabitColors({Key key}) : super(key: key);
+class HabitColors extends StatelessWidget {
 
-  @override
-  _HabitColorsState createState() => _HabitColorsState();
-}
+  List<String> habitColors;
+  var selectedColors = new Map();
+  final  Function(List<String>) updateColors;
 
-class _HabitColorsState extends State<HabitColors> {
-  List<String> selectedColors;
+  HabitColors({Key key, this.habitColors, this.updateColors}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    if (habitColors == null )
+      habitColors = new List<String>();
+      
+    if (selectedColors.isEmpty){
+      if(habitColors!=null)
+        selectedColors = {
+          'blue': habitColors.contains('blue'),
+          'red': habitColors.contains('red'), 
+          'green': habitColors.contains('green'),
+          'orange': habitColors.contains('orange'),
+          'yellow': habitColors.contains('yellow'),
+        };
+
+      else{
+        selectedColors = {
+          'blue': false,
+          'red': false, 
+          'green': false,
+          'orange': false,
+          'yellow': false,
+        };
+      }
+    }
     return Container(
       child: new Column(
         children: <Widget>[
@@ -20,47 +41,72 @@ class _HabitColorsState extends State<HabitColors> {
           new LabeledCheckbox(
               label: 'blue',
               padding: const EdgeInsets.symmetric(horizontal: 20.0),
-              value: false,
+              value: selectedColors['blue'],
               color: Colors.blueAccent,
               onChanged: (val) {
                 print("this happened");
-                selectedColors.add("blue");
+                selectedColors['blue']=val;
+                if (val)
+                  habitColors.add('blue');
+                else
+                  habitColors.remove('blue');
+                this.updateColors(habitColors);
               }),
           new LabeledCheckbox(
               label: 'red',
               padding: const EdgeInsets.symmetric(horizontal: 20.0),
-              value: false,
+              value: selectedColors['red'],
               color: Colors.redAccent,
               onChanged: (val) {
                 print("this happened");
-                selectedColors.add("red");
+                selectedColors['red'] = val;
+                if (val)
+                  habitColors.add('red');
+                else
+                  habitColors.remove('red');
+                this.updateColors(selectedColors.keys);
               }),
           new LabeledCheckbox(
               label: 'green',
               padding: const EdgeInsets.symmetric(horizontal: 20.0),
-              value: false,
+              value: selectedColors['green'],
               color: Colors.greenAccent,
               onChanged: (val) {
                 print("this happened");
-                selectedColors.add('green');
+                selectedColors['green'] = val;
+                if (val)
+                  habitColors.add('green');
+                else
+                  habitColors.remove('green');
+                this.updateColors(selectedColors.keys);
               }),
           new LabeledCheckbox(
               label: 'orange',
               padding: const EdgeInsets.symmetric(horizontal: 20.0),
-              value: false,
+              value: selectedColors['orange'],
               color: Colors.orangeAccent,
               onChanged: (val) {
                 print("this happened");
-                selectedColors.add('orange');
+                selectedColors['orange'] = val;
+                if (val)
+                  habitColors.add('orange');
+                else
+                  habitColors.remove('orange');
+                this.updateColors(selectedColors.keys);
               }),
           new LabeledCheckbox(
               label: 'yellow',
               padding: const EdgeInsets.symmetric(horizontal: 20.0),
-              value: false,
+              value: selectedColors['yellow'] ,
               color: Colors.yellow,
               onChanged: (val) {
                 print("this happened");
-                selectedColors.add('yellow');
+                selectedColors['yellow'] = val;
+                if (val)
+                  habitColors.add('yellow');
+                else
+                  habitColors.remove('yellow');
+                this.updateColors(selectedColors.keys);
               }),
         ],
       ),

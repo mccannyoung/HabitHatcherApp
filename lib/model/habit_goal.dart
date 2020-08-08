@@ -1,11 +1,11 @@
 class HabitGoal {
-  final int id;
+  int id;
   int habitId;
   final DateTime goalStart;
   final DateTime goalEnd;
-  final String timeFrame;
-  final int goalValue;
-  final String handicap;
+  String timeFrame;
+  int goalValue;
+  String handicap;
 
   HabitGoal({this.id, this.habitId, this.goalStart, this.goalEnd, this.timeFrame, this.goalValue, this.handicap});
 
